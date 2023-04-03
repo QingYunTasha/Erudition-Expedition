@@ -372,3 +372,53 @@ redis增加了淘汰池
 淘汰池是一个数组，它的大小是 maxmemory_samples，在每一次淘汰循环中，新随机出
 来的 key 列表会和淘汰池中的 key 列表进行融合，淘汰掉最旧的一个 key 之后，保留剩余
 较旧的 key 列表放入淘汰池中留待下一个循环
+
+## String deep
+SDS simple dynamic string
+
+### embstr vs raw
+<=44 : emb: SDS及object連續
+/>44 : raw： 不連續
+
+1M前 加倍擴容
+之後都1M
+
+## Dict deep
+hash func: siphash
+
+## hash attack
+如果 hash 函数存在偏向性，黑客就可能利用这种偏向性对服务器进行攻击。存在偏向
+性的 hash 函数在特定模式下的输入会导致 hash 第二维链表长度极为不均匀，甚至所有的
+元素都集中到个别链表中，直接导致查找效率急剧下降，从 O(1)退化到 O(n)。有限的服务器
+计算能力将会被 hashtable 的查找效率彻底拖垮。这就是所谓 hash 攻击。
+
+## zip list
+
+## IntSet
+
+## quickList
+zipList + linkedList
+LZF算法壓縮
+zipList length = 8k bytes
+quicklist 默认的压缩深度是 0，也就是不压缩。压缩的实际深度由配置参数 listcompress-depth 决定。为了支持快速的 push/pop 操作，quicklist 的首尾两个 ziplist 不压
+缩，此时深度就是 1。如果深度为 2，就表示 quicklist 的首尾第一个 ziplist 以及首尾第二
+个 ziplist 都不压缩。
+reference: https://matt.sh/redis-quicklist
+
+## jumpList
+zset = hash + skipList
+
+## listpack
+用來取代ziplist
+
+## Rax
+rax: 按key排序
+zset: 按score排序
+被用在stream儲存消息隊列
+
+# extend
+最近看到一篇质量很高的博客文章 《Redis: under the hood》
+这篇博文是老外写的，值得有英语能力的同学学习。这篇文章会带你一步步学会如何阅
+读 Redis 的源码，有一定的难度，不过整体来说还算通俗易懂。文章中 vm 相关代码片段不
+用去理会，这个功能很早就被 Redis 官方废弃了。
+
