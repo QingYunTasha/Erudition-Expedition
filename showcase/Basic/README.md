@@ -6,3 +6,5 @@
 - Transaction
 - Thread design
 - master-slave synchronization
+- CAP
+- Security
